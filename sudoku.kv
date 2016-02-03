@@ -1,0 +1,55 @@
+#:kivy 1.9.1
+
+<SudokuCell>:
+    text: ""
+    font_size: 0.7 * self.width
+    padding: 0.3 * self.width, (self.height - self.line_height) / 2
+    input_filter: lambda text, from_undo: text if ( text.isdigit() and len(self.text) == 0 and 0 < int(text) < 10 ) else ""
+    multiline: False
+    cursor_color: [0, 0, 0, 0]
+
+<SudokuGame>:
+    canvas.before:
+        Color:
+            rgb: 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: "vertical"
+        size: root.size
+        GridLayout:
+            id: grid
+            rows: 9
+            cols: 9
+            line_size: 6
+            canvas:
+                Color:
+                    rgb: 0, 0, 0
+                Rectangle:
+                    pos: self.x + self.width / 3 - self.line_size / 2, self.y
+                    size: self.line_size, self.height
+                Rectangle:
+                    pos: self.x + 2 * self.width / 3 - self.line_size / 2, self.y
+                    size: self.line_size, self.height
+                Rectangle:
+                    pos: self.x, self.y  + self.height / 3 - self.line_size / 2
+                    size: self.width, self.line_size
+                Rectangle:
+                    pos: self.x, self.y  + 2 * self.height / 3 - self.line_size / 2
+                    size: self.width, self.line_size
+        Label:
+            id: message
+            size_hint: 1, 0.05
+            halign: "center"
+            color: [0, 0, 0, 1]
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint: 1, 0.1
+            Button:
+                text: "Solve"
+                on_press: root.solve()
+            Button:
+                text: "Clear"
+                on_press: root.clear()
+   
