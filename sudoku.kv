@@ -38,11 +38,6 @@
                 Rectangle:
                     pos: self.x, self.y  + 2 * self.height / 3 - self.line_size / 2
                     size: self.width, self.line_size
-        Label:
-            id: message
-            size_hint: 1, 0.05
-            halign: "center"
-            color: [0, 0, 0, 1]
         BoxLayout:
             orientation: "horizontal"
             size_hint: 1, 0.1
@@ -52,4 +47,17 @@
             Button:
                 text: "Clear"
                 on_press: root.clear()
+
+<ErrorMessage>:
+    canvas.before:
+        Color:
+            rgb: 1, 1, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    text: "No solution!"
+    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+    size_hint: 0.3, 0.1
+    color: 1, 0, 0, 1
+    bold: True
    

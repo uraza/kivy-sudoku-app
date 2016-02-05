@@ -1,12 +1,14 @@
 import time
 
 from kivy.app               import App
-from kivy.uix.widget        import Widget
+from kivy.uix.label         import Label
 from kivy.uix.textinput     import TextInput
+from kivy.uix.floatlayout   import FloatLayout
+from kivy.clock             import Clock
 
 from sudoku import Sudoku
 
-class SudokuGame(Widget):
+class SudokuGame(FloatLayout):
     # Initialize the grid of text inputs
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -50,7 +52,6 @@ class SudokuGame(Widget):
 
     # Solve the current board
     def solve(self):
-        start = time.time()
         # Read values from the grid
         values = [[self.get_value(row, col) for col in range(9)] for row in range(9)]
         # Try to solve the Sudoku
@@ -59,19 +60,28 @@ class SudokuGame(Widget):
             for row in range(9):
                 for col in range(9):
                     self.text_inputs[9 * row + col].text = str(solver.get_value(row, col))
-            end = time.time()
-            self.ids["message"].text = "Solution found in " + str(round(end-start, 2)) + " seconds"
         else:
-            self.ids["message"].text = "No solution"
+            error_message = ErrorMessage()
+            self.error_messages.append(error_message)
+            self.add_widget(error_message)
+            Clock.schedule_once(self.remove_error_message, 2)
+
+    # Remove the last error message on screen
+    def remove_error_message(self, dt):
+        error_message = self.error_messages.pop()
+        self.remove_widget(error_message)
 
     # Remove all values on the board
     def clear(self):
         for text_input in self.ids["grid"].children:
             text_input.text = ""
-        self.ids["message"].text = ""
 
 
 class SudokuCell(TextInput):
+    pass
+
+
+class ErrorMessage(Label):
     pass
 
 
